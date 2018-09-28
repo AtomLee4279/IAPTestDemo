@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
+@interface ViewController : UIViewController<SKProductsRequestDelegate, SKPaymentTransactionObserver,UITableViewDataSource,UITableViewDelegate>
 
-@interface ViewController : UIViewController
++ (instancetype)getInstance;
+
++ (instancetype)shareInstance;
 
 
 @end
