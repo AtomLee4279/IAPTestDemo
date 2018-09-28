@@ -37,6 +37,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    [self requestProductId:self.iapIds];
+}
+
+//去苹果服务器请求商品
+- (void)requestProductId:(NSArray *)productIds{
+    NSLog(@"-------------请求对应的产品信息----------------");
+    
+    NSSet *nsset = [NSSet setWithArray:productIds];
+    SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:nsset];
+    request.delegate = self;
+    [request start];
 }
 
 #pragma mark  - SKProductsRequestDelegate Delegate Implementation
