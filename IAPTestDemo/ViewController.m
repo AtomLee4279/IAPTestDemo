@@ -58,17 +58,24 @@
 //转菊花动画
 -(void)inProgressAnimation{
     
+    NSLog(@"==inProgressAnimation==");
     UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
     
     [activityIndicatorView startAnimating];
     activityIndicatorView.center = self.view.center;
-    [self.bgCoverView addSubview:activityIndicatorView];
-    [self.view addSubview:self.bgCoverView];
+    [activityIndicatorView setHidesWhenStopped:YES];
+//    [self.bgCoverView addSubview:activityIndicatorView];
+//    [self.view addSubview:self.bgCoverView];
+    [self.view addSubview:activityIndicatorView];
 }
 
 -(void)finishProgressAnimation{
+    NSLog(@"==finishProgressAnimation==");
+    for (UIActivityIndicatorView *view in self.view.subviews) {
+        [view stopAnimating];
+    }
+//    [self.bgCoverView removeFromSuperview];
     
-    [self.bgCoverView removeFromSuperview];
 }
 
 #pragma mark  - SKProductsRequestDelegate Delegate Implementation
