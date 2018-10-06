@@ -292,7 +292,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.AtomLee.IAPTestDemo.IAPTestDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kaolasdk.test20180321;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = debug_0314_dev;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -310,7 +310,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.AtomLee.IAPTestDemo.IAPTestDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kaolasdk.test20180321;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = debug_0314_dev;
 				TARGETED_DEVICE_FAMILY = "1,2";

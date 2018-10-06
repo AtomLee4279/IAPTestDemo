@@ -12,8 +12,11 @@
 
 @property(strong,nonatomic) NSArray *iapIds;
 
+@property(strong,nonatomic) NSArray *iapProducts;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong,nonatomic) UIView *bgCoverView;//菊花转动时的view
 
 @end
 
@@ -37,6 +40,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
     [self requestProductId:self.iapIds];
 }
 
@@ -50,10 +55,33 @@
     [request start];
 }
 
+//转菊花动画
+-(void)inProgressAnimation{
+    
+    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
+    
+    [activityIndicatorView startAnimating];
+    activityIndicatorView.center = self.view.center;
+    [self.bgCoverView addSubview:activityIndicatorView];
+    [self.view addSubview:self.bgCoverView];
+}
+
+-(void)finishProgressAnimation{
+    
+    [self.bgCoverView removeFromSuperview];
+}
+
 #pragma mark  - SKProductsRequestDelegate Delegate Implementation
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
     
+    NSLog(@"--------------收到产品反馈消息---------------------");
+    NSArray *products = response.products;
+    if([products count] == 0){
+        NSLog(@"未找到该商品");
+        return;
+    }
+    self.iapProducts = products;
 }
 
 
@@ -61,6 +89,8 @@
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions{
     
+    //菊花去掉
+    [self finishProgressAnimation];
     //    注意在模拟器上测试,交易永远都是失败的
     for (SKPaymentTransaction *tran in transactions) {
         
@@ -121,11 +151,7 @@
     }
     
     cell.accessoryType = UITableViewCellAccessoryNone;
-    
-    if (cell.textLabel.text.length) {
-        cell.textLabel.text = self.iapIds[indexPath.row];
-    }
-    
+    cell.textLabel.text = self.iapIds[indexPath.row];
     return cell;
 }
 
@@ -133,13 +159,36 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    [self inProgressAnimation];
+    UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+    NSString *productId = cell.textLabel.text;
+    if (!productId.length) {
+        return;
+    }
+    for (SKProduct *pro in self.iapProducts){
+        
+        NSLog(@"%@", [pro description]);
+        NSLog(@"%@", [pro localizedTitle]);
+        NSLog(@"%@", [pro localizedDescription]);
+        NSLog(@"%@", [pro price]);
+        NSLog(@"%@", [pro productIdentifier]);
+        
+        if ([pro.productIdentifier isEqualToString:productId]) {
+            // 创建制服票据对象
+            SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:pro];
+            // 添加到制服队列
+            [[SKPaymentQueue defaultQueue] addPayment:payment];
+        }
+    }
     
     
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-}
+//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+//
+//
+//
+//}
 
 #pragma mark  - Getter & Setter
 
@@ -156,6 +205,17 @@
     return _iapIds;
 }
 
+
+-(UIView*)bgCoverView{
+    if (_bgCoverView) {
+        return _bgCoverView;
+    }
+    
+    CGRect rec = CGRectMake(0, 0, self.view.window.bounds.size.width, self.view.window.bounds.size.height);
+    _bgCoverView = [[UIView alloc] initWithFrame:rec];
+    
+    return _bgCoverView;
+}
 
 
 @end
