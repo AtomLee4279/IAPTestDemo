@@ -16,7 +16,9 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-@property (strong,nonatomic) UIView *bgCoverView;//菊花转动时的view
+@property (retain,nonatomic) UIView *bgCoverView;//菊花转动时的view
+
+@property (retain,nonatomic) UIActivityIndicatorView *activityIndicatorView;//菊花转动时的view
 
 @end
 
@@ -59,22 +61,32 @@
 -(void)inProgressAnimation{
     
     NSLog(@"==inProgressAnimation==");
-    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
+    self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
     
-    [activityIndicatorView startAnimating];
-    activityIndicatorView.center = self.view.center;
-    [activityIndicatorView setHidesWhenStopped:YES];
-//    [self.bgCoverView addSubview:activityIndicatorView];
+    self.activityIndicatorView.center = self.view.center;
+    [self.activityIndicatorView setHidesWhenStopped:YES];
+    [self.bgCoverView addSubview:self.activityIndicatorView];
+    [self.view insertSubview:self.bgCoverView aboveSubview:self.tableView];
+     [self.activityIndicatorView startAnimating];
 //    [self.view addSubview:self.bgCoverView];
-    [self.view addSubview:activityIndicatorView];
+//    [self.view addSubview:activityIndicatorView];
 }
 
 -(void)finishProgressAnimation{
+    
     NSLog(@"==finishProgressAnimation==");
-    for (UIActivityIndicatorView *view in self.view.subviews) {
-        [view stopAnimating];
+   
+//    NSArray *array =  self.bgCoverView.subviews;
+    NSArray *array = self.view.subviews;
+    
+    for (int i=0; i<array.count; i++) {
+        id obj = [array objectAtIndex:i];
+        if ([obj isKindOfClass:[UIActivityIndicatorView class]]) {
+
+            [(UIActivityIndicatorView*)obj stopAnimating];
+        }
     }
-//    [self.bgCoverView removeFromSuperview];
+    [self.bgCoverView removeFromSuperview];
     
 }
 
@@ -82,13 +94,14 @@
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
     
-    NSLog(@"--------------收到产品反馈消息---------------------");
     NSArray *products = response.products;
     if([products count] == 0){
         NSLog(@"未找到该商品");
         return;
     }
     self.iapProducts = products;
+    NSLog(@"--------------收到产品反馈消息:---------------------\n%@",self.iapProducts);
+   
 }
 
 
@@ -173,14 +186,13 @@
         return;
     }
     for (SKProduct *pro in self.iapProducts){
-        
-        NSLog(@"%@", [pro description]);
-        NSLog(@"%@", [pro localizedTitle]);
-        NSLog(@"%@", [pro localizedDescription]);
-        NSLog(@"%@", [pro price]);
-        NSLog(@"%@", [pro productIdentifier]);
-        
         if ([pro.productIdentifier isEqualToString:productId]) {
+            NSLog(@"===即将打印创建支付凭据的对象信息:===\n");
+            NSLog(@"%@", [pro description]);
+            NSLog(@"%@", [pro localizedTitle]);
+            NSLog(@"%@", [pro localizedDescription]);
+            NSLog(@"%@", [pro price]);
+            NSLog(@"%@", [pro productIdentifier]);
             // 创建制服票据对象
             SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:pro];
             // 添加到制服队列
