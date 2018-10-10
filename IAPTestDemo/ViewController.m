@@ -29,7 +29,9 @@
     static ViewController *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [super new];
+//        instance = [super new];
+    UIStoryboard *story = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    instance = [story instantiateViewControllerWithIdentifier:@"firstViewController"];
     });
     return instance;
 }
@@ -42,6 +44,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    NSLog(@"ViewController ===viewdidLoad===:self%@",self);
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self requestProductId:self.iapIds];
@@ -60,7 +63,7 @@
 //转菊花动画
 -(void)inProgressAnimation{
     
-    NSLog(@"==inProgressAnimation==");
+    NSLog(@"==inProgressAnimation:self==:%@",self);
     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
     
     self.activityIndicatorView.center = self.view.center;
@@ -74,11 +77,11 @@
 
 -(void)finishProgressAnimation{
     
-    NSLog(@"==finishProgressAnimation==");
+    NSLog(@"==finishProgressAnimation:self==%@",self);
    
 //    NSArray *array =  self.bgCoverView.subviews;
     NSArray *array = self.view.subviews;
-    
+
     for (int i=0; i<array.count; i++) {
         id obj = [array objectAtIndex:i];
         if ([obj isKindOfClass:[UIActivityIndicatorView class]]) {
@@ -89,6 +92,9 @@
     [self.bgCoverView removeFromSuperview];
     
 }
+
+
+
 
 #pragma mark  - SKProductsRequestDelegate Delegate Implementation
 
@@ -110,6 +116,7 @@
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions{
     
     //菊花去掉
+    NSLog(@"PaymentQueue:viewController:%@,self%@",[ViewController shareInstance],self);
     [self finishProgressAnimation];
     //    注意在模拟器上测试,交易永远都是失败的
     for (SKPaymentTransaction *tran in transactions) {
@@ -179,6 +186,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    NSLog(@"tableView:didSelect:viewController%@,self%@",[ViewController shareInstance],self);
     [self inProgressAnimation];
     UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
     NSString *productId = cell.textLabel.text;
@@ -187,17 +195,18 @@
     }
     for (SKProduct *pro in self.iapProducts){
         if ([pro.productIdentifier isEqualToString:productId]) {
-            NSLog(@"===即将打印创建支付凭据的对象信息:===\n");
+            NSLog(@"===点击了具体商品，创建制服票据对象前：即将打印创建支付凭据的对象信息:===\n");
             NSLog(@"%@", [pro description]);
             NSLog(@"%@", [pro localizedTitle]);
             NSLog(@"%@", [pro localizedDescription]);
             NSLog(@"%@", [pro price]);
             NSLog(@"%@", [pro productIdentifier]);
-            // 创建制服票据对象
+            // 下面两句代码将创建制服票据对象,弹出支付流程相关的操作窗口
             SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:pro];
             // 添加到制服队列
             [[SKPaymentQueue defaultQueue] addPayment:payment];
         }
+        
     }
     
     
