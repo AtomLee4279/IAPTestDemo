@@ -8,12 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
-@interface ViewController : UIViewController<SKProductsRequestDelegate, SKPaymentTransactionObserver,UITableViewDataSource,UITableViewDelegate>
-
-+ (instancetype)getInstance;
-
-+ (instancetype)shareInstance;
-
+@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @end
 

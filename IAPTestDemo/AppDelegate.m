@@ -21,7 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:[ViewController shareInstance]];
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:[[ViewController alloc]init]];
     
     return YES;
 }
@@ -51,7 +51,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    [[SKPaymentQueue defaultQueue] removeTransactionObserver:[ViewController shareInstance]];
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:[[ViewController alloc] init]];
 }
 
 

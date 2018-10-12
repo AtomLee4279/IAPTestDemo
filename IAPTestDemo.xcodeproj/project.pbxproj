@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6721245F21708B6D00085073 /* IAPClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 6721245E21708B6D00085073 /* IAPClass.m */; };
 		673E6477215E0A7A00952D3F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 673E6476215E0A7A00952D3F /* AppDelegate.m */; };
 		673E647A215E0A7A00952D3F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 673E6479215E0A7A00952D3F /* ViewController.m */; };
 		673E647D215E0A7A00952D3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 673E647B215E0A7A00952D3F /* Main.storyboard */; };
@@ -16,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6721245D21708B6D00085073 /* IAPClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAPClass.h; sourceTree = "<group>"; };
+		6721245E21708B6D00085073 /* IAPClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IAPClass.m; sourceTree = "<group>"; };
 		673E6472215E0A7A00952D3F /* IAPTestDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IAPTestDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		673E6475215E0A7A00952D3F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		673E6476215E0A7A00952D3F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -62,6 +65,8 @@
 				673E6476215E0A7A00952D3F /* AppDelegate.m */,
 				673E6478215E0A7A00952D3F /* ViewController.h */,
 				673E6479215E0A7A00952D3F /* ViewController.m */,
+				6721245D21708B6D00085073 /* IAPClass.h */,
+				6721245E21708B6D00085073 /* IAPClass.m */,
 				673E647B215E0A7A00952D3F /* Main.storyboard */,
 				673E647E215E0A7F00952D3F /* Assets.xcassets */,
 				673E6480215E0A7F00952D3F /* LaunchScreen.storyboard */,
@@ -142,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				673E647A215E0A7A00952D3F /* ViewController.m in Sources */,
+				6721245F21708B6D00085073 /* IAPClass.m in Sources */,
 				673E6485215E0A7F00952D3F /* main.m in Sources */,
 				673E6477215E0A7A00952D3F /* AppDelegate.m in Sources */,
 			);
