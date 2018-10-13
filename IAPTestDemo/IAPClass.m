@@ -14,6 +14,16 @@
 
 #pragma mark - private method
 
++ (instancetype)shareInstance{
+    static IAPClass *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [IAPClass new];
+    });
+    return instance;
+}
+
+
 //去苹果服务器请求商品
 - (void)requestProductsInfo:(NSArray *)productIds{
     NSLog(@"-------------请求对应的产品信息----------------");
@@ -27,9 +37,12 @@
 
 - (void)iapTestWithProductId:(NSString *)productId{
     
+    if (!self.iapProducts) {
+        NSLog(@"iapTestWithProductId:从苹果服务器反馈回来的商品列表为空！");
+    }
     for (SKProduct *pro in self.iapProducts){
         if ([pro.productIdentifier isEqualToString:productId]) {
-            NSLog(@"===点击了具体商品，创建制服票据对象前：即将打印创建支付凭据的对象信息:===\n");
+            NSLog(@"===点击了具体商品:创建制服票据对象前：即将打印创建支付凭据的对象信息:===\n");
             NSLog(@"%@", [pro description]);
             NSLog(@"%@", [pro localizedTitle]);
             NSLog(@"%@", [pro localizedDescription]);
@@ -45,7 +58,7 @@
 }
 
 #pragma mark  - SKProductsRequestDelegate Delegate Implementation
-
+//收到苹果返回的商品信息
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response{
     
     NSArray *products = response.products;
@@ -56,6 +69,21 @@
     self.iapProducts = products;
     NSLog(@"--------------收到产品反馈消息:---------------------\n%@",self.iapProducts);
     
+    if ([self.delegate respondsToSelector:@selector(productsResponseDelegate:withData:)]){
+        
+        [self.delegate productsResponseDelegate:@"收到产品反馈消息" withData:self.iapProducts];
+        
+    }
+}
+
+//请求失败: 这里容易报错：无法连接到i s
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
+    
+    if ([self.delegate respondsToSelector:@selector(productsResponseDelegate:withData:)]){
+        
+        [self.delegate productsResponseDelegate:@"request-didFailWithError" withData:error];
+        
+    }
 }
 
 

@@ -12,8 +12,6 @@
 
 @interface ViewController ()
 
-@property (strong,nonatomic) IAPClass *iapClass;
-
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (retain,nonatomic) UIView *bgCoverView;//菊花转动时的view
@@ -33,7 +31,7 @@
     NSLog(@"ViewController ===viewdidLoad===:self%@",self);
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    [self.iapClass requestProductsInfo:self.iapClass.iapIds];
+    [[IAPClass shareInstance] requestProductsInfo:[IAPClass shareInstance].iapIds];
 }
 
 
@@ -82,7 +80,7 @@
 
 #pragma mark  - TableViewDataSource Delegate Implementation
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.iapClass.iapIds.count;
+    return [IAPClass shareInstance].iapIds.count;
 }
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -97,7 +95,7 @@
     }
     
     cell.accessoryType = UITableViewCellAccessoryNone;
-    cell.textLabel.text = self.iapClass.iapIds[indexPath.row];
+    cell.textLabel.text = [IAPClass shareInstance].iapIds[indexPath.row];
     return cell;
 }
 
@@ -112,7 +110,7 @@
     if (!productId.length) {
         return;
     }
-    [self.iapClass iapTestWithProductId:productId];
+    [[IAPClass shareInstance] iapTestWithProductId:productId];
     
     
 }
@@ -129,16 +127,6 @@
     _bgCoverView = [[UIView alloc] initWithFrame:rec];
     
     return _bgCoverView;
-}
-
-
-- (IAPClass *)iapClass {
-    
-    if (_iapClass) {
-        return _iapClass;
-    }
-    _iapClass = [IAPClass new];
-    return _iapClass;
 }
 
 @end
