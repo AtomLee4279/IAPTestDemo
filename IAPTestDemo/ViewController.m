@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import <Foundation/Foundation.h>
 #import "IAPClass.h"
+#import <CommonCrypto/CommonCrypto.h>
+
 
 @interface ViewController ()
 
@@ -110,9 +112,41 @@
     if (!productId.length) {
         return;
     }
-    [[IAPClass shareInstance] iapTestWithProductId:productId];
+    NSString *application_username = [NSString stringWithFormat:@"orderId:%@,uid:%@", @"123456", @"573096385"];
     
+    [[IAPClass shareInstance] iapTestWithProductId:productId
+                              application_username:[self hashedValueForAccountName:application_username]];
     
+}
+
+// Custom method to calculate the SHA-256 hash using Common Crypto
+//安全散列算法：苹果推荐，用来加密application_username
+- (NSString *)hashedValueForAccountName:(NSString*)userAccountName
+{
+    const int HASH_SIZE = 32;
+    unsigned char hashedChars[HASH_SIZE];
+    const char *accountName = [userAccountName UTF8String];
+    size_t accountNameLen = strlen(accountName);
+    
+    // Confirm that the length of the user name is small enough
+    // to be recast when calling the hash function.
+    if (accountNameLen > UINT32_MAX) {
+        NSLog(@"Account name too long to hash: %@", userAccountName);
+        return nil;
+    }
+    CC_SHA256(accountName, (CC_LONG)accountNameLen, hashedChars);
+    
+    // Convert the array of bytes into a string showing its hex representation.
+    NSMutableString *userAccountHash = [[NSMutableString alloc] init];
+    for (int i = 0; i < HASH_SIZE; i++) {
+        // Add a dash every four bytes, for readability.
+        if (i != 0 && i%4 == 0) {
+            [userAccountHash appendString:@"-"];
+        }
+        [userAccountHash appendFormat:@"%02x", hashedChars[i]];
+    }
+    
+    return userAccountHash;
 }
 
 #pragma mark  - Getter & Setter

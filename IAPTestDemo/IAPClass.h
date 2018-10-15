@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestProductsInfo:(NSArray *)productIds;
 
-- (void)iapTestWithProductId:(NSString*)productId;
+- (void)iapTestWithProductId:(NSString*)productId application_username:(NSString*)application_username;
 
 @end
 

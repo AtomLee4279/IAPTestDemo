@@ -35,7 +35,8 @@
 }
 
 
-- (void)iapTestWithProductId:(NSString *)productId{
+- (void)iapTestWithProductId:(NSString *)productId
+        application_username:(NSString*)application_username{
     
     if (!self.iapProducts) {
         NSLog(@"iapTestWithProductId:从苹果服务器反馈回来的商品列表为空！");
@@ -50,6 +51,7 @@
             NSLog(@"%@", [pro productIdentifier]);
             // 下面两句代码将创建制服票据对象,弹出支付流程相关的操作窗口
             SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:pro];
+            payment.applicationUsername = application_username;
             // 添加到制服队列
             [[SKPaymentQueue defaultQueue] addPayment:payment];
         }
@@ -127,7 +129,7 @@
                 
             case SKPaymentTransactionStateFailed: {
                 
-                NSLog(@"交易失败");
+                NSLog(@"交易失败:%@",SKErrorDomain);
                 //关闭交易
             }
                 break;
@@ -136,6 +138,11 @@
         }
     }
 }
+
+//- (BOOL)paymentQueue:(SKPaymentQueue *)queue shouldAddStorePayment:(SKPayment *)payment forProduct:(SKProduct *)product{
+//    NSLog(@"==shouldAddStorePayment==");
+//    return YES;
+//}
 
 #pragma mark  - Getter & Setter
 
