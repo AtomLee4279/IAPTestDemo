@@ -16,14 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @required
 
--(void) productsResponseDelegate:(NSString*)ResponseState withData:(nullable id)products;
+-(void) productsResponseDelegate:(id)ResponseState withData:(nullable id)products;
 
--(void) transactionUpdateDelegate:(NSString*)transactionState withData:(nullable id)data;
+-(void) transactionPurchasedDelegate:(id)transactionState withData:(nullable id)data;
 
 @end
 
 @interface IAPClass : NSObject<SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
+@property(strong,nonatomic) SKPaymentTransaction *currentTransaction;
 
 @property(weak,nonatomic) id<IAPDelegate> delegate;
 
@@ -35,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)shareInstance;
 
-- (void)requestProductsInfo:(NSArray *)productIds;
+- (void)requestProductsInfo;
 
 - (void)iapTestWithProductId:(NSString*)productId application_username:(NSString*)application_username;
 

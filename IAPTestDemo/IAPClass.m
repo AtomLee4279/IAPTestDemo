@@ -25,10 +25,10 @@
 
 
 //去苹果服务器请求商品
-- (void)requestProductsInfo:(NSArray *)productIds{
+- (void)requestProductsInfo{
     NSLog(@"-------------请求对应的产品信息----------------");
     
-    NSSet *nsset = [NSSet setWithArray:productIds];
+    NSSet *nsset = [NSSet setWithArray:self.iapIds];
     SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:nsset];
     request.delegate = self;
     [request start];
@@ -102,7 +102,14 @@
         switch (tran.transactionState) {
             case SKPaymentTransactionStatePurchased:{
                 NSLog(@"交易完成");
-                
+                self.currentTransaction = tran;
+                NSURL *receiptUrl=[[NSBundle mainBundle] appStoreReceiptURL];
+                NSData *receiptData=[NSData dataWithContentsOfURL:receiptUrl];
+                if ([self.delegate respondsToSelector:@selector(transactionPurchasedDelegate:withData:)]){
+                    
+                    [self.delegate transactionPurchasedDelegate:@"TransactionState:Purchased" withData:receiptData];
+                    
+                }
                 // 发送到苹果服务器验证凭证：不再验证购买，而是让后台做这件事情
                 
             }
@@ -130,6 +137,12 @@
             case SKPaymentTransactionStateFailed: {
                 
                 NSLog(@"交易失败:%@",SKErrorDomain);
+                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+                if ([self.delegate respondsToSelector:@selector(transactionPurchasedDelegate:withData:)]){
+                    
+                    [self.delegate transactionPurchasedDelegate:@"TransactionState:Failed" withData:SKErrorDomain];
+                    
+                }
                 //关闭交易
             }
                 break;

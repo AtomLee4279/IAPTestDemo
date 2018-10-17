@@ -33,7 +33,7 @@
     NSLog(@"ViewController ===viewdidLoad===:self%@",self);
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    [[IAPClass shareInstance] requestProductsInfo:[IAPClass shareInstance].iapIds];
+    [[IAPClass shareInstance] requestProductsInfo];
 }
 
 
@@ -81,6 +81,9 @@
 
 
 #pragma mark  - TableViewDataSource Delegate Implementation
+
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [IAPClass shareInstance].iapIds.count;
 }
@@ -106,7 +109,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSLog(@"tableView:didSelect:self%@",self);
-    [self inProgressAnimation];
+//    [self inProgressAnimation];
     UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
     NSString *productId = cell.textLabel.text;
     if (!productId.length) {
