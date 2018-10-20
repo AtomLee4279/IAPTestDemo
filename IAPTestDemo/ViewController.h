@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
-@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+#import "IAPClass.h"
+@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,IAPDelegate>
 
 @end
 

@@ -7,7 +7,7 @@
 //
 
 #import "IAPClass.h"
-
+#import <CommonCrypto/CommonCrypto.h>
 
 
 @implementation IAPClass
@@ -51,12 +51,45 @@
             NSLog(@"%@", [pro productIdentifier]);
             // 下面两句代码将创建制服票据对象,弹出支付流程相关的操作窗口
             SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:pro];
+//            payment.applicationUsername = [self hashedValueForAccountName:application_username];
             payment.applicationUsername = application_username;
+            NSLog(@"点击具体商品applicationUserName:%@",payment.applicationUsername);
             // 添加到制服队列
             [[SKPaymentQueue defaultQueue] addPayment:payment];
         }
         
     }
+}
+
+
+// Custom method to calculate the SHA-256 hash using Common Crypto
+//安全散列算法：苹果推荐，用来加密application_username
+- (NSString *)hashedValueForAccountName:(NSString*)userAccountName
+{
+    const int HASH_SIZE = 32;
+    unsigned char hashedChars[HASH_SIZE];
+    const char *accountName = [userAccountName UTF8String];
+    size_t accountNameLen = strlen(accountName);
+    
+    // Confirm that the length of the user name is small enough
+    // to be recast when calling the hash function.
+    if (accountNameLen > UINT32_MAX) {
+        NSLog(@"Account name too long to hash: %@", userAccountName);
+        return nil;
+    }
+    CC_SHA256(accountName, (CC_LONG)accountNameLen, hashedChars);
+    
+    // Convert the array of bytes into a string showing its hex representation.
+    NSMutableString *userAccountHash = [[NSMutableString alloc] init];
+    for (int i = 0; i < HASH_SIZE; i++) {
+        // Add a dash every four bytes, for readability.
+        if (i != 0 && i%4 == 0) {
+            [userAccountHash appendString:@"-"];
+        }
+        [userAccountHash appendFormat:@"%02x", hashedChars[i]];
+    }
+    
+    return userAccountHash;
 }
 
 #pragma mark  - SKProductsRequestDelegate Delegate Implementation
@@ -107,7 +140,7 @@
                 NSData *receiptData=[NSData dataWithContentsOfURL:receiptUrl];
                 if ([self.delegate respondsToSelector:@selector(transactionPurchasedDelegate:withData:)]){
                     
-                    [self.delegate transactionPurchasedDelegate:@"TransactionState:Purchased" withData:receiptData];
+                    [self.delegate transactionPurchasedDelegate:tran withData:receiptData];
                     
                 }
                 // 发送到苹果服务器验证凭证：不再验证购买，而是让后台做这件事情
@@ -140,7 +173,7 @@
                 [[SKPaymentQueue defaultQueue] finishTransaction:tran];
                 if ([self.delegate respondsToSelector:@selector(transactionPurchasedDelegate:withData:)]){
                     
-                    [self.delegate transactionPurchasedDelegate:@"TransactionState:Failed" withData:SKErrorDomain];
+                    [self.delegate transactionPurchasedDelegate:tran withData:SKErrorDomain];
                     
                 }
                 //关闭交易

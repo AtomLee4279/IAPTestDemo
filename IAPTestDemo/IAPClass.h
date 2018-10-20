@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void) productsResponseDelegate:(id)ResponseState withData:(nullable id)products;
 
--(void) transactionPurchasedDelegate:(id)transactionState withData:(nullable id)data;
+-(void) transactionPurchasedDelegate:(SKPaymentTransaction*)transaction withData:(nullable id)data;
 
 @end
 

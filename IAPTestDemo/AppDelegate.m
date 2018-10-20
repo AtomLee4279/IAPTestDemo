@@ -8,12 +8,12 @@
 
 #import "AppDelegate.h"
 #import <StoreKit/StoreKit.h>
-#import "ViewController.h"
+
 #import "IAPClass.h"
 
 @interface AppDelegate ()
 
-@property (strong,nonatomic) UIViewController* viewcontroller;
+
 
 @end
 
