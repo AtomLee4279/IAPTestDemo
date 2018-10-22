@@ -119,7 +119,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSLog(@"tableView:didSelect:self%@",self);
-//    [self inProgressAnimation];
+    [self inProgressAnimation];
     UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
     NSString *productId = cell.textLabel.text;
     if (!productId.length) {

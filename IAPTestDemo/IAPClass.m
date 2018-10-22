@@ -154,7 +154,7 @@
             case SKPaymentTransactionStateRestored:{
                 NSLog(@"已经购买过商品");
                 //                [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
-                //                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
+                                [[SKPaymentQueue defaultQueue] finishTransaction:tran];
                 // 恢复购买
                 
             }
