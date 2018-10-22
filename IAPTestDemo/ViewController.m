@@ -57,17 +57,17 @@
 -(void)finishProgressAnimation{
     
     NSLog(@"==finishProgressAnimation:self==%@",self);
-   
-//    NSArray *array =  self.bgCoverView.subviews;
-    NSArray *array = self.view.subviews;
 
-    for (int i=0; i<array.count; i++) {
-        id obj = [array objectAtIndex:i];
-        if ([obj isKindOfClass:[UIActivityIndicatorView class]]) {
-
-            [(UIActivityIndicatorView*)obj stopAnimating];
-        }
-    }
+//    NSArray *array = self.view.subviews;
+//
+//    for (int i=0; i<array.count; i++) {
+//        id obj = [array objectAtIndex:i];
+//        if ([obj isKindOfClass:[UIActivityIndicatorView class]]) {
+//
+//            [(UIActivityIndicatorView*)obj stopAnimating];
+//        }
+//    }
+    [self.activityIndicatorView stopAnimating];
     [self.bgCoverView removeFromSuperview];
     
 }
@@ -82,6 +82,7 @@
     
     NSLog(@" =transactionPurchasedDelegate= transactionState:%ld,data:%@",(long)transaction.transactionState,data);
     //结束订单之前，要先做一些操作：例如上传支付凭据。这里是demo所以没有上传。
+    [self finishProgressAnimation];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
@@ -131,7 +132,6 @@
                               application_username:application_username];
     
 }
-
 
 
 #pragma mark  - Getter & Setter
