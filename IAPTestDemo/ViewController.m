@@ -32,6 +32,7 @@
     NSLog(@"ViewController ===viewdidLoad===:self%@",self);
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    [IAPClass shareInstance].delegate = self;
     [[IAPClass shareInstance] requestProductsInfo];
 }
 
@@ -73,13 +74,14 @@
 
 
 - (void)productsResponseDelegate:(nonnull id)ResponseState withData:(nullable id)products {
-    NSLog(@"");
+    NSLog(@"请求苹果商店获取商品列表：productsResponseDelegate");
+    //这里做获取返回后的一些操作：因为是demo所以略去
 }
 
 - (void)transactionPurchasedDelegate:(SKPaymentTransaction*)transaction withData:(nullable id)data {
     
     NSLog(@" =transactionPurchasedDelegate= transactionState:%ld,data:%@",(long)transaction.transactionState,data);
-    //结束订单之前，要先做一些操作：例如上传支付凭据。这里是demo所以没有
+    //结束订单之前，要先做一些操作：例如上传支付凭据。这里是demo所以没有上传。
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 

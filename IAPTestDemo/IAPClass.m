@@ -134,7 +134,7 @@
         
         switch (tran.transactionState) {
             case SKPaymentTransactionStatePurchased:{
-                NSLog(@"交易完成");
+                NSLog(@"交易完成:paymentQueue:currentTransaction.payment.applicationUsername:%@",tran.payment.applicationUsername);
                 self.currentTransaction = tran;
                 NSURL *receiptUrl=[[NSBundle mainBundle] appStoreReceiptURL];
                 NSData *receiptData=[NSData dataWithContentsOfURL:receiptUrl];
